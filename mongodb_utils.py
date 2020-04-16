@@ -1,5 +1,6 @@
 import os
 import pymongo
+from pymongo.errors import ExecutionTimeout
 import re
 from bson.json_util import dumps
 
@@ -76,10 +77,13 @@ def search_in_result_collection(source=None, author_id=None, object_text=None, l
         raise Exception('you need to specify at least one parameter')
 
     print(search_query)
-    search_result = result_collection.find(search_query, explicit_fields).limit(limit)
-    # if object_text:
-    #     search_result = search_result.sort([('score', {'$meta': 'textScore'})])
-    return [elem for elem in search_result]
+    try:
+        search_result = result_collection.find(search_query, explicit_fields).limit(limit).max_time_ms(120000)
+        # if object_text:
+        #     search_result = search_result.sort([('score', {'$meta': 'textScore'})])
+        return [elem for elem in search_result]
+    except ExecutionTimeout:
+        return {'error': 'ExecutionTimeout'}
 
 
 if __name__ == '__main__':
