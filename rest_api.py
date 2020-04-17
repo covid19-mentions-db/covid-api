@@ -56,7 +56,8 @@ class Search(Resource):
             time_end=self.time_end,
             limit=self.limit,
         )
-
+        if isinstance(result, list):
+            return {'result': result}
         return result
 
 
