@@ -37,6 +37,8 @@ print('create location 2d index')
 result_collection.create_index([("location.coordinates", pymongo.GEO2D)])
 print('create time index')
 result_collection.create_index([("time", pymongo.ASCENDING)])
+print('create location.name index')
+result_collection.create_index([("location.name", pymongo.ASCENDING)])
 print('end create')
 
 

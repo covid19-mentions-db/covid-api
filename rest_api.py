@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from mongodb_utils import search_in_result_collection
+from datetime import datetime
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -49,12 +51,21 @@ class Search(Resource):
 
         _time_start = args['time_start']
         if _time_start:
-            self.time_start = int(_time_start)
+            if '-' in _time_start:
+                dt = datetime.strptime(_time_start, "%Y-%m-%d")
+                self.time_start = int(dt.timestamp())
+            else:
+                self.time_start = int(_time_start)
         else:
             self.time_start = None
         _time_end = args['time_end']
         if _time_end:
-            self.time_end = int(_time_start)
+            if '-' in _time_end:
+                dt = datetime.strptime(_time_end, "%Y-%m-%d")
+                dt = dt.replace(hour=23, minute=59, second=59)
+                self.time_end = int(dt.timestamp())
+            else:
+                self.time_end = int(_time_start)
         else:
             self.time_end = None
 
@@ -75,6 +86,7 @@ class Search(Resource):
             object_text=self.object_text,
             language=self.language,
             keyword=self.keyword,
+            location=self.location,
             lat=self.lat,
             lon=self.lon,
             distance=self.distance,
