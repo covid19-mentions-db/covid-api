@@ -17,7 +17,7 @@ or organize something like "nginx + uwsgi + app", or even use it in docker conta
 
 ### How to use:
 Api call example
-- `http://127.0.0.1:5000/search?object_text=want&language=en&lat=50.1009288936&lon=14.4912392365&distance=1000`
+- `https://covid19-mentions-db.com/api/search?object_text=Microsoft&limit=20&source=&author_id&object_text=&language&keyword&lat=&lon=&distance=&time_start=&time_end=&location=Canada`
 
 
 ### All the supported parameters:
