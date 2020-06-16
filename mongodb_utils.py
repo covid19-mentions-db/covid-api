@@ -43,7 +43,8 @@ print('end create')
 
 
 def search_in_result_collection(source=None, author_id=None, object_text=None, language=None, keyword=None, location=None,
-                                lat=None, lon=None, distance=None, time_start=None, time_end=None, limit=12, timeout='120'):
+                                lat=None, lon=None, distance=None, time_start=None, time_end=None, limit=12, timeout='120',
+                                batch_size=12):
 
     timeout = int(timeout)
     if timeout > 120:
@@ -83,13 +84,17 @@ def search_in_result_collection(source=None, author_id=None, object_text=None, l
         raise Exception('you need to specify at least one parameter')
 
     print(search_query)
+    res = []
     try:
-        search_result = result_collection.find(search_query, explicit_fields).limit(limit).max_time_ms(timeout*1000)
+        search_result = result_collection.find(search_query, explicit_fields, batch_size=batch_size).limit(limit).max_time_ms(timeout*1000)
         # if object_text:
         #     search_result = search_result.sort([('score', {'$meta': 'textScore'})])
-        return [elem for elem in search_result]
+
+        for elem in search_result:
+            res.append(elem)
+        return res
     except ExecutionTimeout:
-        return {'error': 'ExecutionTimeout'}
+        return {'error': 'ExecutionTimeout', 'result': res}
 
 
 if __name__ == '__main__':

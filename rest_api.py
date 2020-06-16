@@ -24,6 +24,7 @@ class Search(Resource):
         parser.add_argument('time_end', type=str)
         parser.add_argument('limit', type=str, default='12')
         parser.add_argument('timeout', type=str, default='120')
+        parser.add_argument('batch_size', type=int, default=12)
 
         args = parser.parse_args()
 
@@ -34,6 +35,7 @@ class Search(Resource):
         self.keyword = args['keyword']
         self.location = args['location']
         self.timeout = args['timeout']
+        self.batch_size = args['batch_size']
 
         _lat = args['lat']
         if _lat:
@@ -96,6 +98,7 @@ class Search(Resource):
             time_end=self.time_end,
             limit=self.limit,
             timeout=self.timeout,
+            batch_size=self.batch_size,
         )
         if isinstance(result, list):
             return {'result': result}
