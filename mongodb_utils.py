@@ -43,7 +43,11 @@ print('end create')
 
 
 def search_in_result_collection(source=None, author_id=None, object_text=None, language=None, keyword=None, location=None,
-                                lat=None, lon=None, distance=None, time_start=None, time_end=None, limit=12):
+                                lat=None, lon=None, distance=None, time_start=None, time_end=None, limit=12, timeout='120'):
+
+    timeout = int(timeout)
+    if timeout > 120:
+        timeout = 120
 
     search_query = {}
     explicit_fields = {'_id': 0}
@@ -80,7 +84,7 @@ def search_in_result_collection(source=None, author_id=None, object_text=None, l
 
     print(search_query)
     try:
-        search_result = result_collection.find(search_query, explicit_fields).limit(limit).max_time_ms(120000)
+        search_result = result_collection.find(search_query, explicit_fields).limit(limit).max_time_ms(timeout*1000)
         # if object_text:
         #     search_result = search_result.sort([('score', {'$meta': 'textScore'})])
         return [elem for elem in search_result]
