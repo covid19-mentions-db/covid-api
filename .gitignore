@@ -1,0 +1,26 @@
+### Linux ###
+*~
+.directory
+.fuse_hidden*
+.Trash-*
+.nfs*
+
+### PyCharm ###
+.idea/
+.idea_modules/
+
+
+### Python ###
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# Environments
+env/
+venv/
+
+*.log
+
+
+DRAFT.MD

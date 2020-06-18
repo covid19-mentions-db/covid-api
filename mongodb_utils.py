@@ -71,7 +71,19 @@ def search_in_result_collection(source=None, author_id=None, object_text=None, l
         search_query['location.coordinates'] = {'$geoWithin': {'$centerSphere': [[lon, lat], distance / 6378100]}}
 
     if location:
-        search_query['location.name'] = {'$regex': re.escape(location), '$options': 'i'}
+        esc_location = re.escape(location)
+        location_lst = esc_location.split()
+        reg_loc_lst = []
+
+        for part in location_lst:
+
+            if len(part) > 1:
+                reg_loc_lst.append(f'[{part[0:1].lower()}{part[0:1].upper()}]{part[1:]}')
+
+        res_location = ' '.join(reg_loc_lst)
+        search_query['location.name'] = {'$regex': r'(^|[!"#$%&\')(*+,-./:;<=>?@\\\]\[^_`{|}~\s\d])' +
+                                                   res_location +
+                                                   r'($|[!"#$%&\')(*+,-./:;<=>?@\\\]\[^_`{|}~\s\d])'}
 
     if time_start or time_end:
         search_query['time'] = {}
